@@ -76,7 +76,16 @@ body {
    border-radius: 15px;
    box-shadow: 0px 3px 10px -2px #29b0ff;
    animation: ani 0.5s linear;
-   display: none;
+   display: block;
+   opacity: 0;
+   transform: translateY(-30px);
+   pointer-events: none;
+   transition: all 0.4s ease-in-out;
+}
+.weekinput.show{
+    opacity: 1;
+    transform: translateY(0px);
+    pointer-events: auto;
 }
 .form_input{
     width: 65%;
@@ -213,7 +222,6 @@ td {
     background-color: red;
 }
 .input_box{
-    animation: ani 0.5s linear;
    width: 100%;
    max-width: 300px;
    position: absolute;
@@ -226,9 +234,17 @@ td {
    background-color: #fff;
    border-radius: 15px;
    box-shadow: 0px 3px 10px -2px #29b0ff;
-   display: none;
+   display: flex;
    flex-direction: column;
-
+   opacity: 0;
+   transform: translateY(-30px);
+   transition: all 0.4s ease-in-out;
+   pointer-events: none; 
+}
+.input_box.show{
+    opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
 }
 .input_title{
     width: 100%;
@@ -317,7 +333,6 @@ td {
 }
 
 .mini_box{
-    animation: ani 0.5s linear;
     position: absolute;
     top: 17%;
     width: 100%;
@@ -327,8 +342,17 @@ td {
     background-color: #fff;
     border-radius: 15px;
     box-shadow: 0px 3px 10px -2px #29b0ff;
-    display: none;
+    display: flex;
     flex-direction: column;
+    opacity: 0;
+    transform: translateY(-30px);
+    transition: all 0.4s ease-in-out;
+    pointer-events: none;
+}
+.mini_box.show{
+    opacity: 1;
+    transform: translateY(0px);
+    pointer-events: auto;
 }
 .work_input{
     width: 100%;
@@ -362,14 +386,13 @@ label{
     /* outline: none; */
 }
 .input_workname{
-    animation: ani 0.5s linear;
     width: 100%;
     max-width: 300px;
     height: 200px;
     top: 17%;
     position: absolute;
     margin: 0 auto;
-    display: none;
+    display: flex;
     flex-direction: column;
     gap: 10px;
     align-items: center;
@@ -378,6 +401,15 @@ label{
     background-color: #fff;
     border-radius: 15px;
     box-shadow: 0px 3px 10px -2px #29b0ff;
+    opacity: 0;
+    transform: translateY(-30px);
+    transition: all 0.4s ease-in-out;
+    pointer-events: none;
+}
+.input_workname.show{
+    opacity: 1;
+    transform: translateY(0px);
+    pointer-events: auto;
 }
 .input_workname input{
     width: 80%;

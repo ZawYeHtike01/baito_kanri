@@ -64,22 +64,25 @@ function createCalender(year,month){
 
 function closeweekinput(){
     const inputbox=document.getElementById("weekinput");
-    inputbox.style.display='none';
+    inputbox.classList.remove('show');
+    const clsid=document.getElementById("date_box");
+    clsid.classList.add('show');
+    opendDateBox();
 }
 function openweekinput(){
-     const inputbox=document.getElementById("weekinput");
-    inputbox.style.display='block';
-        const clsid=document.getElementById("date_box");
-    clsid.style.display="none";
+    const inputbox=document.getElementById("weekinput");
+    inputbox.classList.add('show');
+    const clsid=document.getElementById("date_box");
+    clsid.classList.remove('show');
 }
 function closeInputBox(){
     const inputbox=document.getElementById("input_box");
-    inputbox.style.display='none';
+    inputbox.classList.remove('show');
 }
 
 function openInputBox(year,month,day){
     const inputbox=document.getElementById("input_box");
-    inputbox.style.display='flex';
+    inputbox.classList.add('show');
     const inputBody=document.getElementById('input_body');
     const monthNames = [
         "January","February","March","April","May","June",
@@ -116,7 +119,7 @@ function nextMont(){
 }
 function opendDateBox(){
     const clsid=document.getElementById("date_box");
-    clsid.style.display="flex";
+    clsid.classList.add('show');
     const inputBody=document.getElementById('date_body');
     bodydata=` <h5>Hour Management</h5>
             <ul>`;
@@ -151,31 +154,31 @@ document.getElementById("add_name").addEventListener('click',()=>{
     closeworkinput();
     dropdown();
     const clsid=document.getElementById("mini_box");
-    clsid.style.display="flex";
+    clsid.classList.add('show');
 })
 document.getElementById("close").addEventListener('click',()=>{
     closeworkinput();
     const clsid=document.getElementById("mini_box");
-    clsid.style.display="flex";
+    clsid.classList.add('show');
 })
 function openworkinput(){
     const clsid=document.getElementById("input_workname");
-    clsid.style.display="flex";
+    clsid.classList.add('show');
 }
 
 function closeworkinput(){
     const clsid=document.getElementById("input_workname");
-    clsid.style.display="none";
+    clsid.classList.remove('show');
 }
 
 function closeDateBox(){
     const clsid=document.getElementById("date_box");
-    clsid.style.display="none";
+    clsid.classList.remove('show');
 }
 
 function closeMiniBox(){
     const clsid=document.getElementById("mini_box");
-    clsid.style.display="none";
+    clsid.classList.remove('show');
 }
 
 function dropdown(){
@@ -192,9 +195,9 @@ function dropdown(){
 
 function openMiniBox(year,month,day){
     const clsid=document.getElementById("mini_box");
-    clsid.style.display="flex";
+    clsid.classList.add('show');
     const inputbox=document.getElementById("input_box");
-    inputbox.style.display="none";
+    inputbox.classList.remove('show');
     let dts=dateToString(year,month,day);
     const addBtn=document.getElementById("add");
     const cancelBtn=document.getElementById("cancel");
@@ -230,7 +233,8 @@ function openMiniBox(year,month,day){
         let flag=saveItem(dts,textvalue,startvalue,endvalue);
         if(flag){
             alert("Add Successfull");
-            clsid.style.display = "none";
+            clsid.classList.remove('show');
+            openInputBox(year,month,day);
             textInput.value = "";
             statTime.value.trim() = "";
             endTime.value.trim() = "";
