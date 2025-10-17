@@ -304,11 +304,6 @@ function saveDate(){
 function saveItem(date,jobname,stat,end){
     let shift=JSON.parse(localStorage.getItem("shifts") || "{}");
     let flag;
-    if(stat>end){
-        alert("Please select the right time");
-        flag=false;
-        return;
-    }
     if(!shift[date]){
         shift[date]={};
     }
