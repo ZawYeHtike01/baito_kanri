@@ -312,7 +312,12 @@ function saveItem(date,jobname,stat,end){
     if(!shift[date]){
         shift[date]={};
     }
-    shift[date][jobname]={stat,end};
+    let uniqueName = jobname;
+    let count = 1;
+    while (shift[date][uniqueName]) {
+        uniqueName = `${jobname}_${count++}`;
+    }
+    shift[date][uniqueName] = { stat, end };
     localStorage.setItem("shifts", JSON.stringify(shift));
     createCalender(currentdate.getFullYear(),currentdate.getMonth());
     flag=true;
