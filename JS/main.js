@@ -248,6 +248,7 @@ function openMiniBox(year,month,day){
     time_24hr: true,
     dateFormat: "H:i",
     defaultDate: "none",
+    allowInput:true,
   });
   flatpickr("#end_time", {
     enableTime: true,
@@ -255,6 +256,7 @@ function openMiniBox(year,month,day){
     time_24hr: true,
     dateFormat: "H:i",
     defaultDate: "none",
+    allowInput:true,
   });
 }
 
@@ -439,6 +441,7 @@ flatpickr("#start_time", {
     time_24hr: true,
     dateFormat: "H:i",
     defaultDate: "none",
+    allowInput:true,
   });
   flatpickr("#end_time", {
     enableTime: true,
@@ -446,6 +449,7 @@ flatpickr("#start_time", {
     time_24hr: true,
     dateFormat: "H:i",
     defaultDate: "none",
+    allowInput:true,
   });
 
 checkOverhours();

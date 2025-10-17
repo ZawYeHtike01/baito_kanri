@@ -452,6 +452,23 @@ label{
     font-weight: bolder;
 
 }
+.flatpickr-calendar {
+    font-family: 'Segoe UI', sans-serif;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.flatpickr-time {
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+.flatpickr-hour,
+.flatpickr-minute {
+    width: 50px;
+    font-weight: bold;
+}
+
 @media (max-width: 768px) {
     .navbar {
         width: 95%;
