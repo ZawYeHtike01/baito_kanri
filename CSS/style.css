@@ -25,6 +25,19 @@ body {
     margin-top: 15px;
     text-align: center;
 }
+.message{
+    width: 90%;
+    max-width: 800px;
+    margin-top: 15px;
+    text-align: center;
+}
+.message>a{
+    width: 100px;
+    height: 100px;
+    color: green;
+    font-size: 50px;
+}
+
 .start_box{
     width: 90%;
     max-width: 800px;

@@ -312,7 +312,6 @@ function saveItem(date,jobname,stat,end){
     if(!shift[date]){
         shift[date]={};
     }
-
     let uniqueName = jobname;
     let count = 1;
     while (shift[date][uniqueName]) {
@@ -321,6 +320,8 @@ function saveItem(date,jobname,stat,end){
 
     shift[date][uniqueName] = { stat, end };
 
+
+    shift[date][uniqueName] = { stat, end };
     localStorage.setItem("shifts", JSON.stringify(shift));
     createCalender(currentdate.getFullYear(),currentdate.getMonth());
     flag=true;
@@ -339,7 +340,7 @@ function deleteDate(id){
     if(!confirm("Are you sure you want to delete this date?")) return;
 
     if(dateflags[id]){
-        delete dateflags[id];
+        delete dateflags[id];   
         localStorage.setItem("dateflags", JSON.stringify(dateflags));
         alert("Deleted Successfully");
         opendDateBox(); 
@@ -419,7 +420,13 @@ function getHoursDifference(start, end) {
     const [eH, eM] = end.split(":").map(Number);
     const startTime = sH * 60 + sM;
     const endTime = eH * 60 + eM;
-    return (endTime - startTime) / 60;
+
+    let dif=endTime-startTime;
+    if(dif<0){
+        dif+=24*60;
+    }
+
+    return dif / 60;
 }
 
 function prexMont(){
