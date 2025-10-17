@@ -149,6 +149,7 @@ document.getElementById("add_name").addEventListener('click',()=>{
     localStorage.setItem('worksname',JSON.stringify(work));
     alert("add successfull");
     closeworkinput();
+    dropdown();
     const clsid=document.getElementById("mini_box");
     clsid.style.display="flex";
 })
@@ -177,6 +178,18 @@ function closeMiniBox(){
     clsid.style.display="none";
 }
 
+function dropdown(){
+    const textInput=document.getElementById("input_select");
+    let work=JSON.parse(localStorage.getItem("worksname") || "{}");
+    let dd=`<option value="">please select the work</option>`;
+    for(let w in work){
+        let wo=work[w];
+        dd+=`<option value="${wo.name}">${wo.name}</option>`;
+    }
+    dd+=`<option value="other">other</option>`;
+    textInput.innerHTML=dd;
+}
+
 function openMiniBox(year,month,day){
     const clsid=document.getElementById("mini_box");
     clsid.style.display="flex";
@@ -196,15 +209,7 @@ function openMiniBox(year,month,day){
             closeMiniBox();
         }
     }
-
-    let work=JSON.parse(localStorage.getItem("worksname") || "{}");
-    let dd=`<option value="">please select the work</option>`;
-    for(let w in work){
-        let wo=work[w];
-        dd+=`<option value="${wo.name}">${wo.name}</option>`;
-    }
-    dd+=`<option value="other">other</option>`;
-    textInput.innerHTML=dd;
+    dropdown();
 
     cancelBtn.onclick=()=>{
         textInput.value = "";
@@ -307,7 +312,15 @@ function saveItem(date,jobname,stat,end){
     if(!shift[date]){
         shift[date]={};
     }
-    shift[date][jobname]={stat,end};
+
+    let uniqueName = jobname;
+    let count = 1;
+    while (shift[date][uniqueName]) {
+        uniqueName = `${jobname}_${count++}`;
+    }
+
+    shift[date][uniqueName] = { stat, end };
+
     localStorage.setItem("shifts", JSON.stringify(shift));
     createCalender(currentdate.getFullYear(),currentdate.getMonth());
     flag=true;
