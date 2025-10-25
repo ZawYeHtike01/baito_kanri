@@ -32,7 +32,7 @@ onAuthStateChanged(auth,(user)=>{
 createCalender(currentdate.getFullYear(),currentdate.getMonth());
     }else{
         alert("Please Login First");
-        window.location.href="/index.html";
+        window.location.href="./index.html";
     }
 })
 
