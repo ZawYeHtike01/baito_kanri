@@ -33,7 +33,7 @@ Singninform.onsubmit=(e)=>{
 let singnin=async()=>{
     try{
          await signInWithEmailAndPassword(auth,Email.value,Password.value);
-         window.location.href="home.html";
+         window.location.href="./home.html";
     }catch(e){
         alert(e.message);
     }
