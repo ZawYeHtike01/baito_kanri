@@ -1,6 +1,6 @@
 🌐 Project Title
 
-留学生出席チェックシステム（Attendance Checker for International Students）
+バイト管理
 
 ⸻
 
