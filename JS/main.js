@@ -1,6 +1,45 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import {
+  getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import {
+  getFirestore, collection,setDoc, addDoc,getDoc, getDocs, updateDoc,deleteField, deleteDoc, doc, query, where
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAqFADtK5JDC6vDaQ7F4uV-v4xokYZ4BnE",
+  authDomain: "fir-test-403f2.firebaseapp.com",
+  projectId: "fir-test-403f2",
+  storageBucket: "fir-test-403f2.firebasestorage.app",
+  messagingSenderId: "334851316125",
+  appId: "1:334851316125:web:fc5fc08ad06b894f7ff774",
+  measurementId: "G-B5NXGV949T",
+  databaseURL:"https://fir-test-403f2-default-rtdb.europe-west1.firebasedatabase.app/"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+
+let userId=JSON.parse(localStorage.getItem("user") || "{}");
+onAuthStateChanged(auth,(user)=>{
+    if(user){
+        console.log("user email"+user.email);
+        localStorage.setItem("user",JSON.stringify(user.uid));
+        checkOverhours();
+// localStorage.removeItem("worksname");
+
+createCalender(currentdate.getFullYear(),currentdate.getMonth());
+    }else{
+        alert("Please Login First");
+        window.location.href="/index.html";
+    }
+})
+
 let currentdate=new Date();
 
-function createCalender(year,month){
+window.createCalender=async(year,month)=>{
+    const user=auth.currentUser;
     const monthyear=document.getElementById("monthyear");
     const firstday=new Date(year,month,1);
     const lastday=new Date(year,month+1,0);
@@ -24,29 +63,36 @@ function createCalender(year,month){
     }
 
     let total=0;
+    const over=await checkOverhours();
+    console.log(over)
     for(let day=1;day<=lastday.getDate();day++){
         const today=new Date();
         const isToday=
         day===today.getDate() &&
         year===today.getFullYear() &&
         month===today.getMonth();
-        let dts=dateToString(year,month,day);
-        let checkdts=dateToString(year,month,day);
-        const over=checkOverhours();
-        const isOver=over.includes(checkdts);
-        let caldata=getItem(dts);
-        let shift=JSON.parse(localStorage.getItem("shifts") || "{}");
-        let shiftDay=shift[checkdts];
-        for (let job in shiftDay) {
-                    const s = shiftDay[job].stat;
-                    const e = shiftDay[job].end;
+        let dts=dateToString(year,month,day);   
+        // let dateStr = dateToString(year,month,day);
+        console.log(dts);
+        const isOver=over.includes(dts);
+        console.log(isOver);
+        const dateref = doc(db, "shifts", user.uid, "workshifts", dts);
+        const docSnap = await getDoc(dateref);
+        const caldata = docSnap.exists() ? docSnap.data() : {};
+        // let shift=JSON.parse(localStorage.getItem("shifts") || "{}");
+        for (let job in caldata) {
+                if(!caldata[job].start || !caldata[job].end) continue;
+                    const s = caldata[job].start;
+                    const e = caldata[job].end;
+                    console.log(s,e)
                     total += getHoursDifference(s, e);
         }
         table+=`<td onclick="openInputBox(${year},${month},${day})" class="${isToday ? 'td_today' : ''} ${isOver ? 'td_over' : ''}">
                             <h4>${day}</h4><div>`;
         for(let d in caldata){
             let jobtime=caldata[d];
-            table+=`(${jobtime.stat}-${jobtime.end})`;
+            if(!jobtime.start || !jobtime.end) continue;
+            table+=`(${jobtime.start}-${jobtime.end})`;
         }
         table+=`</div></td>`;
 
@@ -56,31 +102,31 @@ function createCalender(year,month){
        
     }
     let all=total.toFixed(2);
-    b=`<p id="total_hour">This month total hours : ${all} hours</p>`;
+    let b=`<p id="total_hour">This month total hours : ${all} hours</p>`;
      table+="</tr>";
     calender.innerHTML=table;
     document.getElementById("totalhour").innerHTML=b;
 }
 
-function closeweekinput(){
+window.closeweekinput=()=>{
     const inputbox=document.getElementById("weekinput");
     inputbox.classList.remove('show');
     const clsid=document.getElementById("date_box");
     clsid.classList.add('show');
     opendDateBox();
 }
-function openweekinput(){
+window.openweekinput=()=>{
     const inputbox=document.getElementById("weekinput");
     inputbox.classList.add('show');
     const clsid=document.getElementById("date_box");
     clsid.classList.remove('show');
 }
-function closeInputBox(){
+window.closeInputBox=()=>{
     const inputbox=document.getElementById("input_box");
     inputbox.classList.remove('show');
 }
 
-function openInputBox(year,month,day){
+window.openInputBox=async(year,month,day)=>{
     const inputbox=document.getElementById("input_box");
     inputbox.classList.add('show');
     const inputBody=document.getElementById('input_body');
@@ -92,13 +138,14 @@ function openInputBox(year,month,day){
     console.log("This is openInputBox"+day)
 
     let dts=dateToString(year,month,day);
-    let data=getItem(dts);
-    bodydata=`<h5>${monthNames[month]}  ${day}</h5>
+    let data=await getItem(dts);
+    let bodydata=`<h5>${monthNames[month]}  ${day}</h5>
             <ul>`;
     
     for(let d in data){
         let job=data[d];
-        bodydata+=`<li><p>${d}</p><p>${job.stat}-${job.end}</p><p  onclick="deleteItem('${year}',${month},'${day}','${d}')"><i class="fa-solid fa-trash"></i></p></li>`;
+        if(!job.start || !job.end) continue;
+        bodydata+=`<li><p>${d}</p><p>${job.start}-${job.end}</p><p  onclick="deleteItem('${year}',${month},'${day}','${d}')"><i class="fa-solid fa-trash"></i></p></li>`;
     }
     bodydata+=`</ul>
         <button onclick="openMiniBox(${year},${month},${day})"><i class="fa-solid fa-plus"></i></button>
@@ -107,21 +154,21 @@ function openInputBox(year,month,day){
     inputBody.innerHTML=bodydata;
 }
 
-function dateToString(year,month,day){
-    const newmonth=month+1;
-    let dateToString=year+"-"+newmonth+"-"+day;
-    return dateToString;
+window.dateToString=(year,month,day)=>{
+    const mm = String(month + 1).padStart(2,'0');
+    const dd = String(day).padStart(2,'0');
+    return `${year}-${mm}-${dd}`;
 }
 
-function nextMont(){
+window.nextMont=()=>{
     currentdate.setMonth(currentdate.getMonth()+1);
     createCalender(currentdate.getFullYear(),currentdate.getMonth());
 }
-function opendDateBox(){
+window.opendDateBox=()=>{
     const clsid=document.getElementById("date_box");
     clsid.classList.add('show');
     const inputBody=document.getElementById('date_body');
-    bodydata=` <h5>Hour Management</h5>
+    let bodydata=` <h5>Hour Management</h5>
             <ul>`;
     const dateflag=JSON.parse(localStorage.getItem("dateflags") || {});
     for(let date in dateflag){
@@ -161,27 +208,27 @@ document.getElementById("close").addEventListener('click',()=>{
     const clsid=document.getElementById("mini_box");
     clsid.classList.add('show');
 })
-function openworkinput(){
+window.openworkinput=()=>{
     const clsid=document.getElementById("input_workname");
     clsid.classList.add('show');
 }
 
-function closeworkinput(){
+window.closeworkinput=()=>{
     const clsid=document.getElementById("input_workname");
     clsid.classList.remove('show');
 }
 
-function closeDateBox(){
+window.closeDateBox=()=>{
     const clsid=document.getElementById("date_box");
     clsid.classList.remove('show');
 }
 
-function closeMiniBox(){
+window.closeMiniBox=()=>{
     const clsid=document.getElementById("mini_box");
     clsid.classList.remove('show');
 }
 
-function dropdown(){
+window.dropdown=()=>{
     const textInput=document.getElementById("input_select");
     let work=JSON.parse(localStorage.getItem("worksname") || "{}");
     let dd=`<option value="">please select the work</option>`;
@@ -193,7 +240,7 @@ function dropdown(){
     textInput.innerHTML=dd;
 }
 
-function openMiniBox(year,month,day){
+window.openMiniBox=(year,month,day)=>{
     const clsid=document.getElementById("mini_box");
     clsid.classList.add('show');
     const inputbox=document.getElementById("input_box");
@@ -234,10 +281,9 @@ function openMiniBox(year,month,day){
         if(flag){
             alert("Add Successfull");
             clsid.classList.remove('show');
-            openInputBox(year,month,day);
             textInput.value = "";
-            statTime.value.trim() = "";
-            endTime.value.trim() = "";
+            statTime.value= "";
+            endTime.value= "";
         }
         
     }
@@ -260,7 +306,7 @@ function openMiniBox(year,month,day){
   });
 }
 
-function saveDate(){
+window.saveDate=()=>{
     const hour=document.getElementById("select").value;
     const startdate=document.getElementById("start_date").value;
     const enddate=document.getElementById("end_date").value;
@@ -300,43 +346,65 @@ function saveDate(){
     localStorage.setItem("dateflags",JSON.stringify(dateflag));
     alert("Add Successfull");
     closeweekinput();
-    hour.value="";
-    startdate.value="";
-    enddate.value="";
     createCalender(currentdate.getFullYear(),currentdate.getMonth());
     opendDateBox();
 }
 
-function saveItem(date,jobname,stat,end){
-    let shift=JSON.parse(localStorage.getItem("shifts") || "{}");
+window.saveItem=async(date,jobname,start,end)=>{
+    const user=auth.currentUser;
     let flag;
-    if(!shift[date]){
-        shift[date]={};
+    if (!user) return window.location.href="index.html";
+    try{
+        
+        const userDocRef = doc(db, "shifts", user.uid);
+
+        await setDoc(userDocRef, { userId: user.uid }, { merge: true });
+        const workShiftRef = doc(collection(userDocRef, "workshifts"), date);
+
+        const docSnap = await getDoc(workShiftRef);
+
+        let shift = {};
+
+        if (docSnap.exists()) {
+            shift = docSnap.data();
+            console.log("This is data from firestore"+shift);
+        }
+        let uniqueName = jobname;
+        let count = 1;
+        while (shift[uniqueName]) {
+            uniqueName = `${jobname}_${count++}`;
+        }
+
+        shift[uniqueName] = { start: start, end: end };
+
+        await setDoc(workShiftRef, shift, { merge: true });
+         
+         createCalender(currentdate.getFullYear(),currentdate.getMonth());
+        flag=true;
+        return flag;
+
+    }catch(e){
+        console.log(e.message);
+        flag=false;
+        return flag;
     }
-    let uniqueName = jobname;
-    let count = 1;
-    while (shift[date][uniqueName]) {
-        uniqueName = `${jobname}_${count++}`;
-    }
-
-    shift[date][uniqueName] = { stat, end };
-
-
-    shift[date][uniqueName] = { stat, end };
-    localStorage.setItem("shifts", JSON.stringify(shift));
-    createCalender(currentdate.getFullYear(),currentdate.getMonth());
-    flag=true;
-    return flag;
-    
 }
 
-function getItem(date){
-    let shifts = JSON.parse(localStorage.getItem("shifts")) || {};
-    return shifts[date] || {};
+window.getItem=async(date)=>{
+    const user=auth.currentUser;
+    const dateref=doc(db,"shifts",user.uid,"workshifts",date);
+    const getdata=await getDoc(dateref);
+
+    let shifts={};
+    if(getdata.exists()){
+        shifts=getdata.data();
+    }
+    console.log("that is getItem",shifts);
+    return shifts;
 }
 
-function deleteDate(id){
-    let dateflags = JSON.parse(localStorage.getItem("dateflags") || "{}");
+window.deleteDate=async(id)=>{
+   let dateflags = JSON.parse(localStorage.getItem("dateflags") || "{}");
 
     if(!confirm("Are you sure you want to delete this date?")) return;
 
@@ -349,34 +417,29 @@ function deleteDate(id){
     createCalender(currentdate.getFullYear(),currentdate.getMonth());
 }
 
-function deleteItem(year,month,day,jobname){
-
+window.deleteItem=async(year,month,day,jobname)=>{
+    const user=auth.currentUser;
     let date=dateToString(year,month,day);
-
+    const dateref=doc(db,"shifts",user.uid,"workshifts",date);
     if(!confirm(`"Are you sure Delete ${jobname}"`)){
         return;
     }
 
-
-    let shifts=JSON.parse(localStorage.getItem("shifts")) || {};
-    if(shifts[date]  && shifts[date][jobname]){
-        delete shifts[date][jobname];
+    try{
+        await updateDoc(dateref,{
+            [jobname]:deleteField()
+        })
+        openInputBox(year,month,day);
+        createCalender(currentdate.getFullYear(),currentdate.getMonth());
+    }catch(e){
+        console.log(e.message);
     }
     
-    if(shifts[date] && Object.keys(shifts[date]).length === 0){
-        delete shifts[date];
-    }
-    
-    localStorage.setItem("shifts",JSON.stringify(shifts));
-
-    openInputBox(year,month,day);
-    createCalender(currentdate.getFullYear(),currentdate.getMonth());
-
 }
 
-function checkOverhours() {
+window.checkOverhours=async()=>{
     let dateflags = JSON.parse(localStorage.getItem("dateflags") || "{}");
-    let allshifts = JSON.parse(localStorage.getItem("shifts") || "{}");
+     const user = auth.currentUser;
     let overDates = [];
 
     for (let key of Object.keys(dateflags)) {
@@ -392,31 +455,34 @@ function checkOverhours() {
             if (weekEnd > end) weekEnd = new Date(end);
             let total = 0;
             for (let d = new Date(weekStart); d <= weekEnd; d.setDate(d.getDate() + 1)) {
-                const dateStr = `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
-                const shiftDay = allshifts[dateStr];
-                if (!shiftDay) continue;
+                let dateStr = dateToString(d.getFullYear(), d.getMonth(), d.getDate());
+                const dateref=doc(db,"shifts",user.uid,"workshifts",dateStr);
+                const docSnap = await getDoc(dateref);
+
+                if (docSnap.exists()) {
+                    const shiftDay = docSnap.data();
 
                 for (let job in shiftDay) {
-                    const s = shiftDay[job].stat;
+                    if(!shiftDay[job].start || !shiftDay[job].end) continue;
+                    const s = shiftDay[job].start;
                     const e = shiftDay[job].end;
                     total += getHoursDifference(s, e);
+                }
                 }
             }
             if (total > limitHours) {
                 for (let d = new Date(weekStart); d <= weekEnd; d.setDate(d.getDate() + 1)) {
-                    const dateStr = `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+                    let dateStr = dateToString(d.getFullYear(), d.getMonth(), d.getDate());
                     if (!overDates.includes(dateStr)) overDates.push(dateStr);
                 }
             }
             current.setDate(current.getDate() + 1);
         }
     }
-
-    console.log("Over 28 hours:", overDates);
     return overDates;
 }
 
-function getHoursDifference(start, end) {
+window.getHoursDifference=(start, end)=>{
     const [sH, sM] = start.split(":").map(Number);
     const [eH, eM] = end.split(":").map(Number);
     const startTime = sH * 60 + sM;
@@ -430,9 +496,9 @@ function getHoursDifference(start, end) {
     return dif / 60;
 }
 
-function prexMont(){
+window.prexMont=()=>{
     currentdate.setMonth(currentdate.getMonth()-1);
-     createCalender(currentdate.getFullYear(),currentdate.getMonth());
+    createCalender(currentdate.getFullYear(),currentdate.getMonth());
 }
 
 flatpickr("#start_time", {
@@ -452,7 +518,4 @@ flatpickr("#start_time", {
     allowInput:true,
   });
 
-checkOverhours();
-// localStorage.removeItem("worksname");
 
-createCalender(currentdate.getFullYear(),currentdate.getMonth());

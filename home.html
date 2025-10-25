@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="QMn8nJszqWRwra_0Ek0a_AFgby4zB0ntJMM_5AR--f0" />    <title>Baito_KanRi</title>
+    <link rel="stylesheet" href="/CSS/style.css">
+    <link rel="icon" href="./Image/logo.png">
+    <script src="/JS/main.js" type="module"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <div class="main">
+        <div class="nav">
+            <div class="navbar">
+                <img src="/logo.png" alt=""><h1>バイト管理</h1>
+            </div>
+        </div>
+        <div class="start_box">
+            <button onclick="opendDateBox()"><i class="fa-solid fa-plus"></i>Add Your Week</button>
+            
+        </div>
+        <div class="calender_box">
+            <div class="calender">
+                <div class="cal_title">
+                    <button onclick="prexMont()"><i class="fa-solid fa-arrow-left"></i></button>
+                    <h2 id="monthyear"></h2>
+                    <button onclick="nextMont()"><i class="fa-solid fa-arrow-right"></i></button>
+                </div>
+                <div class="cal_box">
+                    <table id="cal_tb">
+                        
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="input_box" class="input_box">
+            <div class="input_title"><i onclick="closeInputBox()" class="fa-solid fa-circle-xmark"></i></div>
+            <div id="input_body" class="input_body">
+                <h5>Your Work</h5>
+                <!-- <ul>
+                    <li><p>Hello SushiRo</p><p>18:00-20:00</p><p><i class="fa-solid fa-trash"></i></p></li>
+                </ul> -->
+
+                <!-- <button><i class="fa-solid fa-plus"></i></button> -->
+            </div>
+        </div>
+
+        <div id="date_box" class="input_box">
+            <div class="input_title"><i onclick="closeDateBox()" class="fa-solid fa-circle-xmark"></i></div>
+            <div id="date_body" class="input_body">
+                <h5>Hour Management</h5>
+                 <button onclick="openweekinput()"><i class="fa-solid fa-plus"></i></button>
+            </div>
+        </div>
+        
+        <div class="mini_box" id="mini_box">
+            <div class="input_title"><i onclick="closeMiniBox()" class="fa-solid fa-circle-xmark"></i></div>
+            <div class="work_input">
+                <label for="input_select">Work Name</label>
+                <select name="" id="input_select">
+                    <option value="">please select the work</option>
+                    <option value="other">other</option>
+                </select>
+                <label for="start_time">From</label>
+                <input id="start_time" type="time" required step="60" value="13:00">
+                <label for="end_time">To</label>
+                <input id="end_time" type="time" required step="60" value="13:00">
+                <input id="add" type="button" value="Save">
+                <input id="cancel" type="button" value="Clear">
+            </div>
+        </div>
+        <div class="input_workname" id="input_workname">
+                <input id="input_text" type="text" placeholder="Work Name" required>
+                <input id="add_name" type="button" value="Add">
+                <input id="close" type="button" value="Close">
+        </div>
+        <div id="weekinput" class="weekinput">
+            <div class="input_title"><i onclick="closeweekinput()" class="fa-solid fa-circle-xmark"></i></div>
+            <div class="form_input">
+                <label for="select">Week Per Hours</label>
+                <select id="select"> 
+                <option value="28">28 hours</option>
+                <option value="48">40 hours</option>
+                </select>
+                <label for="start_date">Start Date</label>
+                <input type="date" name="" id="start_date">
+                <label for="end_date">End Date</label>
+                <input type="date" name="" id="end_date">
+                <input onclick="saveDate()" id="add_date" type="button" value="ADD">
+            </div>
+
+            
+        </div>
+        <div id="totalhour" class="totalhour">
+            
+        </div>
+        <div class="message">
+            <h3>review နဲ့ လိုတာလေးပြောပေးကြပါဦးနော်</h3>
+            <h6>This app is under the testing</h6>
+            <a href="https://line.me/ti/p/_89mp8ymsX"><i class="fa-brands fa-line"></i></a>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  
+</body>
+</html>
