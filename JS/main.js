@@ -452,6 +452,11 @@ window.closeweekinput = () => {
   opendDateBox();
 };
 
+window.closeDateBox=()=>{
+  const clsid = document.getElementById("date_box");
+  if (clsid) clsid.classList.remove('show');
+}
+
 window.opendDateBox = () => {
   const clsid = document.getElementById("date_box");
   if (clsid) clsid.classList.add('show');
