@@ -35,6 +35,7 @@ let singnin=async()=>{
          await signInWithEmailAndPassword(auth,Email.value,Password.value);
          window.location.href="./home.html";
     }catch(e){
-        alert(e.message);
+        console.log(e.message);
+        alert("Worng Email Or Password");
     }
 }
