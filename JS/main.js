@@ -34,7 +34,6 @@ onAuthStateChanged(auth, async (user) => {
     await checkOverhours();
     await createCalender(currentdate.getFullYear(), currentdate.getMonth());
   } else {
-    alert("Please Login First");
     window.location.href = "./index.html";
   }
 });
@@ -240,6 +239,13 @@ window.checkOverhours = async () => {
   }
 };
 
+window.getuserName=async()=>{
+  const user=auth.currentUser;
+  const userref=doc(db,'users',user.uid);
+  const getdata=await getDoc(userref);
+  return getdata.data();
+}
+
 
 window.createCalender = async (year, month) => {
   const user = auth.currentUser;
@@ -249,6 +255,10 @@ window.createCalender = async (year, month) => {
   const firstday = new Date(year, month, 1);
   const lastday = new Date(year, month + 1, 0);
   const calender = document.getElementById("cal_tb");
+  const welcome = document.getElementById("welcome");
+  const getuer=await getuserName();
+  console.log(getuer);
+  welcome.innerHTML=`<i class="fa-solid fa-user"></i>${getuer.name}`;
 
   const monthNames = [
     "January","February","March","April","May","June",
@@ -457,6 +467,17 @@ window.closeDateBox=()=>{
   if (clsid) clsid.classList.remove('show');
 }
 
+document.getElementById("logout").addEventListener('click',async()=>{
+  if(!confirm("Are You Sure Logout") )return;
+  try{
+    await signOut(auth);
+    alert("Logout Successfull");
+    window.location.href="index.html";
+  }catch(e){
+    console.log(e.message)
+  }
+})
+
 window.opendDateBox = () => {
   const clsid = document.getElementById("date_box");
   if (clsid) clsid.classList.add('show');
@@ -581,3 +602,5 @@ if (typeof flatpickr !== 'undefined') {
     allowInput: true,
   });
 }
+
+
