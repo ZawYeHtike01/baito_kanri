@@ -30,12 +30,31 @@ Singninform.onsubmit=(e)=>{
     singnin();
 }
 
+document.getElementById("check").addEventListener('click',()=>{
+  if(Password.type==="password"){
+    Password.type="text";
+  }else{
+    Password.type="password";
+  }
+})
+
 let singnin=async()=>{
+    if(!Email.value){
+      alert("Please Fill the Email");
+      Email.classList.add("border-danger");
+    }
+    if(!Password.value){
+      alert("Please Fill the Password");
+      Password.classList.add("border-danger");
+    }
     try{
          await signInWithEmailAndPassword(auth,Email.value,Password.value);
          window.location.href="./home.html";
     }catch(e){
-        console.log(e.message);
-        alert("Worng Email Or Password");
+         if (e.code=== "auth/user-not-found" || e.code === "auth/wrong-password" || e.code ==="auth/invalid-credential"){
+            alert("Wrong Email And Password");
+            Email.classList.add("border-danger");
+            Password.classList.add("border-danger");
+         }
     }
 }

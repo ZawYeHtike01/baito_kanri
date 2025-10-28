@@ -382,7 +382,7 @@ window.openMiniBox = (year, month, day) => {
         if (statTime) statTime.value = "";
         if (endTime) endTime.value = "";
       } else {
-        alert("Add Failed - see console");
+        alert("Add Failed");
       }
     };
   }
