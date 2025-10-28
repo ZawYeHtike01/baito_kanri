@@ -255,9 +255,9 @@ window.createCalender = async (year, month) => {
   const firstday = new Date(year, month, 1);
   const lastday = new Date(year, month + 1, 0);
   const calender = document.getElementById("cal_tb");
+  const todaywork=document.getElementById("td_work");
   const welcome = document.getElementById("welcome");
   const getuer=await getuserName();
-  console.log(getuer);
   welcome.innerHTML=`<i class="fa-solid fa-user"></i>${getuer.name}`;
 
   const monthNames = [
@@ -268,7 +268,21 @@ window.createCalender = async (year, month) => {
 
   const over = await checkOverhours();
   const monthData = await getMonthShifts(user, year, month);
-
+  const tds=dateToString(currentdate.getFullYear(),currentdate.getMonth(),currentdate.getDate());
+  const tddata=monthData[tds] || {};
+  console.log(tddata);
+  let da=`<h4>${tds}</h4><ul>`;
+  if(Object.keys(tddata).length===0){
+    da+=`<li>No Work</li>`;
+  }else{
+    for(let j in tddata){
+        da+=`<li><h5>${j}</h5><h5>${tddata[j].start} to  ${tddata[j].end} </h5></li>`;
+    }
+  }
+    
+  da+=`</ul>`;
+  todaywork.innerHTML=da;
+  
   let table = "<tr>";
   const days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
   for (let d of days) table += "<th>" + d + "</th>";

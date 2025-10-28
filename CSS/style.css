@@ -354,6 +354,39 @@ td {
     color: red;
     transition: ease-in 0.2s;
 }
+.todaywork{
+    width: 90%;
+    max-width: 800px;
+    height: 200px;
+    margin-top: 3rem;
+}
+.todaywork h3{
+    margin-bottom: 0.5rem;
+}
+.td_work h4{
+    margin-bottom: 1rem;
+}
+.td_work{
+    margin-top: 1rem;
+    width: 100%;
+    height: 100px;
+}
+.td_work ul{
+    display: flex;
+    align-items: center;
+    
+}
+.td_work ul li{
+    border-radius: 10px;
+    width: 100%;
+    height: 40px;
+    border: 1px solid black;
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
 @keyframes ani{
     from{
         transform: translateY(-400px);
