@@ -25,6 +25,14 @@ let Email=document.getElementById("email");
 let Password=document.getElementById("password");
 let Singninform=document.getElementById("singinForm");
 
+onAuthStateChanged(auth,(user)=>{
+  if(user){
+    window.location.href='home.html';
+  }else{
+    console.log('user is not login');
+  }
+})
+
 Singninform.onsubmit=(e)=>{
     e.preventDefault(); 
     singnin();

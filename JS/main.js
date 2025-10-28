@@ -24,6 +24,7 @@ const db = getFirestore(app);
 
 let currentdate = new Date();
 
+
 const monthCache = {};
 
 onAuthStateChanged(auth, async (user) => {
@@ -246,6 +247,30 @@ window.getuserName=async()=>{
   return getdata.data();
 }
 
+window.showTodayWork=async()=>{
+   const cdt = new Date();
+  const user = auth.currentUser;
+  const tds = dateToString(cdt.getFullYear(), cdt.getMonth(), cdt.getDate());
+  const todaywork = document.getElementById("td_work");
+
+  
+  const q = doc(db, "shifts", user.uid, "workshifts", tds);
+  const snap = await getDoc(q);
+
+  let da = `<h4>${tds}</h4><ul>`;
+
+  if (!snap.exists()) {
+    da += `<li>No Work</li>`;
+  } else {
+    const tddata = snap.data(); 
+    for (let j in tddata) {
+      da += `<li><h5>${j}</h5><h5>${tddata[j].start} to ${tddata[j].end}</h5></li>`;
+    }
+  }
+
+  da += `</ul>`;
+  todaywork.innerHTML = da;
+}
 
 window.createCalender = async (year, month) => {
   const user = auth.currentUser;
@@ -255,11 +280,10 @@ window.createCalender = async (year, month) => {
   const firstday = new Date(year, month, 1);
   const lastday = new Date(year, month + 1, 0);
   const calender = document.getElementById("cal_tb");
-  const todaywork=document.getElementById("td_work");
   const welcome = document.getElementById("welcome");
   const getuer=await getuserName();
   welcome.innerHTML=`<i class="fa-solid fa-user"></i>${getuer.name}`;
-
+  const monthData = await getMonthShifts(user, year, month);
   const monthNames = [
     "January","February","March","April","May","June",
     "July","August","September","October","November","December"
@@ -267,21 +291,7 @@ window.createCalender = async (year, month) => {
   monthyear.textContent = monthNames[month] + " " + year;
 
   const over = await checkOverhours();
-  const monthData = await getMonthShifts(user, year, month);
-  const tds=dateToString(currentdate.getFullYear(),currentdate.getMonth(),currentdate.getDate());
-  const tddata=monthData[tds] || {};
-  console.log(tddata);
-  let da=`<h4>${tds}</h4><ul>`;
-  if(Object.keys(tddata).length===0){
-    da+=`<li>No Work</li>`;
-  }else{
-    for(let j in tddata){
-        da+=`<li><h5>${j}</h5><h5>${tddata[j].start} to  ${tddata[j].end} </h5></li>`;
-    }
-  }
-    
-  da+=`</ul>`;
-  todaywork.innerHTML=da;
+  await showTodayWork();
   
   let table = "<tr>";
   const days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
