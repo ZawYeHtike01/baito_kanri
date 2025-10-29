@@ -583,3 +583,33 @@ label{
         padding: 5px 10px;
     }
 }
+
+/* ✅ iOS Input & Select Fix */
+input, select, button, textarea {
+  -webkit-appearance: none;
+  appearance: none;
+  font-size: 16px !important; /* prevent iOS zoom-in bug */
+  border-radius: 8px;
+  line-height: normal;
+  box-sizing: border-box;
+}
+
+/* ✅ iOS Select dropdown arrow remove */
+select::-ms-expand {
+  display: none;
+}
+
+/* ✅ Improve layout on Safari */
+input[type="time"], input[type="date"], select {
+  height: 40px;
+  padding: 0 10px;
+}
+
+/* ✅ Optional: custom arrow for select */
+select {
+  background-color: #fff;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%2329b0ff' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 10px 6px;
+}
