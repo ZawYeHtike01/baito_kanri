@@ -266,7 +266,7 @@ window.showTodayWork=async()=>{
   } else {
     const tddata = snap.data(); 
     for (let j in tddata) {
-      da += `<li><h5>${j}</h5><h5>${tddata[j].start} to ${tddata[j].end}</h5></li>`;
+      da += `<li><h5>${j}</h5><h5>${tddata[j].start} to ${tddata[j].end}</h5></li><br>`;
     }
   }
 
