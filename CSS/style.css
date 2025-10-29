@@ -374,6 +374,7 @@ td {
 .td_work ul{
     display: flex;
     align-items: center;
+    flex-direction: column;
     
 }
 .td_work ul li{
