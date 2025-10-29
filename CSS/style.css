@@ -603,6 +603,7 @@ select::-ms-expand {
 input[type="time"], input[type="date"], select {
   height: 40px;
   padding: 0 10px;
+  width: 200px;
 }
 
 
