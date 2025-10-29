@@ -1,4 +1,4 @@
-* {
+*{
     box-sizing: border-box;
     padding: 0;
     margin: 0;
@@ -603,7 +603,6 @@ select::-ms-expand {
 input[type="time"], input[type="date"], select {
   height: 40px;
   padding: 0 10px;
-  width: 200px;
 }
 
 
