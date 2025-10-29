@@ -262,11 +262,11 @@ window.showTodayWork=async()=>{
   const snap = await getDoc(q);
 
   let da = `<h4>${tds}</h4><ul>`;
-
-  if (!snap.exists()) {
+  const tddata = snap.data(); 
+  console.log(snap.data());
+  if (Object.keys(tddata).length===0) {
     da += `<li>No Work</li>`;
   } else {
-    const tddata = snap.data(); 
     for (let j in tddata) {
       da += `<li><h5>${j}</h5><h5>${tddata[j].start} to ${tddata[j].end}</h5></li>`;
     }
