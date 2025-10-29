@@ -27,45 +27,6 @@ let currentdate = new Date();
 
 const monthCache = {};
 
-Notification.requestPermission().then(permission=>{
-  if(permission==='granted'){
-    console.log("permission allowed");
-  }
-})
-
-window.showMorningNotification=()=>{
-  const title = "今日のシフト";
-  const options = {
-    body: "おはようございます！今日のシフトを確認しましょう。",
-    icon: "logo.png"
-  };
-  new Notification(title, options);
-}
-
-window.schedule8AMNotification=async(user)=>{
-  const now = new Date();
-  const next8AM = new Date();
-  next8AM.setHours(13, 0, 0, 0);
-
-  const date = dateToString(now.getFullYear(), now.getMonth(), now.getDate());
-  if (now > next8AM) {
-    next8AM.setDate(next8AM.getDate() + 1);
-  }
-
-
-  const q=doc(db,'shifts',user.uid,'workshifts',date);
-  const snap=await getDoc(q);
-  const getData=snap.data();
-  const delay = next8AM - now;
-
-  if(getData.exists){
-      setTimeout(() => {
-      showMorningNotification();
-      schedule8AMNotification(); 
-    }, delay);
-  }
-  
-}
 
 
 onAuthStateChanged(auth, async (user) => {
@@ -74,7 +35,6 @@ onAuthStateChanged(auth, async (user) => {
     localStorage.setItem("user", JSON.stringify(user.uid));
     await showTodayWork();
     await checkOverhours();
-    await schedule8AMNotification(user);
     await createCalender(currentdate.getFullYear(), currentdate.getMonth());
   } else {
     window.location.href = "./index.html";
