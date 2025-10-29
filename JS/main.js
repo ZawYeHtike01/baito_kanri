@@ -31,7 +31,7 @@ onAuthStateChanged(auth, async (user) => {
   if (user) {
     console.log("user email " + user.email);
     localStorage.setItem("user", JSON.stringify(user.uid));
-    
+    await showTodayWork();
     await checkOverhours();
     await createCalender(currentdate.getFullYear(), currentdate.getMonth());
   } else {
@@ -291,7 +291,7 @@ window.createCalender = async (year, month) => {
   monthyear.textContent = monthNames[month] + " " + year;
 
   const over = await checkOverhours();
-  await showTodayWork();
+  
   
   let table = "<tr>";
   const days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
