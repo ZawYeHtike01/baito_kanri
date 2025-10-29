@@ -142,6 +142,7 @@ window.saveItem = async (date, jobname, start, end) => {
       monthCache[key][date] = shift;
     }
     await createCalender(currentdate.getFullYear(), currentdate.getMonth());
+    await showTodayWork();
     return true;
   } catch (e) {
     console.error("saveItem error:", e);
@@ -169,6 +170,7 @@ window.deleteItem = async (year, month, day, jobname) => {
     }
 
     await openInputBox(year, month, day);
+     await showTodayWork();
     await createCalender(currentdate.getFullYear(), currentdate.getMonth());
   } catch (e) {
     console.error("deleteItem error:", e);
