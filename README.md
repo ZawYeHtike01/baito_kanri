@@ -37,4 +37,11 @@
 🧑‍💻 作者（Author）
 
 Zaw Ye Htike
-フロントエンド開発者（Frontend Developer）
+フロントエンド開発者（Web Developer）
+
+Tester
+Khine Zar Than
+Aye Myat Mon
+Ohn Mar Myint
+Nyi Zayan Aung
+Ei Kay Thar
