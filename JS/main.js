@@ -413,7 +413,7 @@ window.openMiniBox = (year, month, day) => {
         return;
       }
       let flag = await saveItem(dts, textvalue, startvalue, endvalue);
-      if (flag) {
+      if (flag===true) {
         alert("Add Successfull");
         if (clsid) clsid.classList.remove('show');
         if (textInput) textInput.value = "";

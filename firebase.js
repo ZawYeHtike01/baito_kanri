@@ -44,9 +44,6 @@ document.getElementById("check").addEventListener('click',()=>{
 
   
 
-
-
-
 let singnup=async()=>{
     if(!name.value){
       alert("Please Fill The Name");
