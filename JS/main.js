@@ -476,6 +476,7 @@ window.closeInputBox = () => {
   if (inputbox) inputbox.classList.remove('show');
 };
 
+
 window.openweekinput = () => {
   const inputbox = document.getElementById("weekinput");
   if (inputbox) inputbox.classList.add('show');
@@ -632,3 +633,4 @@ if (typeof flatpickr !== 'undefined') {
 }
 
 
+// localStorage.removeItem('dateflags');
