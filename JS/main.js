@@ -112,9 +112,9 @@ window.saveItem = async (date, jobname, start, end) => {
   if (!user) return window.location.href = "index.html";
 
   try {
-    const userDocRef = doc(db, "shifts", user.uid);
-    await setDoc(userDocRef, { userId: user.uid }, { merge: true });
-    const workShiftRef = doc(collection(userDocRef, "workshifts"), date);
+    // const userDocRef = doc(db, "shifts", user.uid);
+    // await setDoc(userDocRef, { userId: user.uid }, { merge: true });
+    const workShiftRef = doc(db, "shifts", user.uid, "workshifts", date);
 
     const docSnap = await getDoc(workShiftRef);
 
@@ -259,9 +259,9 @@ window.showTodayWork=async()=>{
   const snap = await getDoc(q);
 
   let da = `<h4>${tds}</h4><ul>`;
-  const tddata = snap.data(); 
+  const tddata = snap.data() || {}; 
   console.log(snap.data());
-  if (tddata.length<=0) {
+  if (Object.keys(tddata).length===0) {
     da += `<li>No Work</li>`;
   } else {
     for (let j in tddata) {
