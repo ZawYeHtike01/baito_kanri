@@ -31,8 +31,6 @@ const monthCache = {};
 
 onAuthStateChanged(auth, async (user) => {
   if (user) {
-    console.log("user email " + user.email);
-    localStorage.setItem("user", JSON.stringify(user.uid));
     await showTodayWork();
     await checkOverhours();
     await createCalender(currentdate.getFullYear(), currentdate.getMonth());
@@ -58,8 +56,7 @@ window.getHoursDifference = (start, end) => {
   return dif / 60;
 };
 
-
-async function getMonthShifts(user, year, month) {
+window.getMonthShifts=async(user, year, month)=>{
   const key = `${year}-${String(month + 1).padStart(2, '0')}`; 
   if (monthCache[key]) return monthCache[key];
 
@@ -145,7 +142,7 @@ window.saveItem = async (date, jobname, start, end) => {
     await showTodayWork();
     return true;
   } catch (e) {
-    console.error("saveItem error:", e);
+    console.log("saveItem error:", e.message);
     return false;
   }
 };
@@ -264,7 +261,7 @@ window.showTodayWork=async()=>{
   let da = `<h4>${tds}</h4><ul>`;
   const tddata = snap.data(); 
   console.log(snap.data());
-  if (Object.keys(tddata).length===0) {
+  if (tddata.length<=0) {
     da += `<li>No Work</li>`;
   } else {
     for (let j in tddata) {
