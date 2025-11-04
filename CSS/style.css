@@ -254,9 +254,11 @@ td {
 
 .holidays::before{
     content: '🎌';
+    font-size: smaller;
 }
 .holidays::after{
     content: '🎉';
+    font-size: smaller;
 }
 .holidays{
     /* border: 1px solid black; */
