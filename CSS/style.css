@@ -252,9 +252,16 @@ td {
     background-color: red;
 }
 
-
+.holidays::before{
+    content: '🎌';
+}
+.holidays::after{
+    content: '🎉';
+}
 .holidays{
-    color: rgb(115, 5, 5);
+    /* border: 1px solid black; */
+   color: black;
+    
     font-weight: bolder;
 }
 .input_box{

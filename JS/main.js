@@ -340,7 +340,7 @@ window.createCalender = async (year, month) => {
     }
 
     const matchDate=Holidays.filter(h=> h.date===dts);
-    const isHolidays= matchDate.length>0 || new Date(year,month,day).getDay()===6 || new Date(year,month,day).getDay()===0;
+    const isHolidays= matchDate.length>0;
 
     table += `<td onclick="openInputBox(${year},${month},${day})" class="${isToday ? 'td_today' : ''} ${isOver ? 'td_over' : ''}">
                 <h4 class="${isHolidays ? 'holidays' : ''}">${day}</h4><div>`;
