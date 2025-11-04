@@ -251,6 +251,12 @@ td {
 .td_over{
     background-color: red;
 }
+
+
+.holidays{
+    color: rgb(115, 5, 5);
+    font-weight: bolder;
+}
 .input_box{
    width: 100%;
    max-width: 300px;
@@ -315,9 +321,7 @@ td {
     cursor: pointer;
     z-index: 100;
 }
-/* .input_body h5{
-    padding-left:-50%;
-} */
+
 .input_body li{
     display: flex;
     width: 90%;
@@ -333,6 +337,7 @@ td {
 .input_body ul{
     margin-top: 1.6rem;
 }
+
 .input_body li p{
     overflow: hidden;
     display: flex;

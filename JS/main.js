@@ -29,11 +29,13 @@ const monthCache = {};
 
 
 
+
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     await showTodayWork();
     await checkOverhours();
     await createCalender(currentdate.getFullYear(), currentdate.getMonth());
+    
   } else {
     window.location.href = "./index.html";
   }
@@ -55,6 +57,19 @@ window.getHoursDifference = (start, end) => {
   if (dif < 0) dif += 24 * 60;
   return dif / 60;
 };
+
+
+
+window.JapaneseHolidays=async(year)=>{
+  const url=`https://date.nager.at/api/v3/PublicHolidays/${year}/JP`;
+  const res=await fetch(url);
+  const data=await res.json();
+  return data;
+  
+}
+
+const Holidays=await JapaneseHolidays(currentdate.getFullYear())  || [];
+
 
 window.getMonthShifts=async(user, year, month)=>{
   const key = `${year}-${String(month + 1).padStart(2, '0')}`; 
@@ -258,9 +273,13 @@ window.showTodayWork=async()=>{
   const q = doc(db, "shifts", user.uid, "workshifts", tds);
   const snap = await getDoc(q);
 
-  let da = `<h4>${tds}</h4><ul>`;
+  const matchDate=Holidays.filter(h=>h.date===tds);
+  let da = `<h4>${tds}`;
+  if(matchDate.length>0){
+    da+=`(${matchDate[0].localName})`;
+  }
+  da+=`</h4><ul>`;
   const tddata = snap.data() || {}; 
-  console.log(snap.data());
   if (Object.keys(tddata).length===0) {
     da += `<li>No Work</li>`;
   } else {
@@ -320,8 +339,17 @@ window.createCalender = async (year, month) => {
       total += getHoursDifference(caldata[job].start, caldata[job].end);
     }
 
+    const matchDate=Holidays.filter(h=> h.date===dts);
+    const isHolidays= matchDate.length>0 || new Date(year,month,day).getDay()===6 || new Date(year,month,day).getDay()===0;
+
     table += `<td onclick="openInputBox(${year},${month},${day})" class="${isToday ? 'td_today' : ''} ${isOver ? 'td_over' : ''}">
-                <h4>${day}</h4><div>`;
+                <h4 class="${isHolidays ? 'holidays' : ''}">${day}</h4><div>`;
+   
+    
+    if(matchDate.length>0){
+      console.log(matchDate[0].name)
+    }
+    
     for (let d in caldata) {
       let jobtime = caldata[d];
       if (!jobtime.start || !jobtime.end) continue;
@@ -351,10 +379,17 @@ window.openInputBox = async (year, month, day) => {
     "January","February","March","April","May","June",
     "July","August","September","October","November","December"
   ];
-
   let dts = dateToString(year, month, day);
+  console.log(Holidays)
+  const matchDate=Holidays.filter(h=> h.date===dts);
   let data = await getItem(dts);
-  let bodydata = `<h5>${monthNames[month]}  ${day}</h5><ul>`;
+  let bodydata = `<h5>${monthNames[month]}  ${day}</h5>`;
+
+  if(matchDate.length>0){
+    bodydata+=`<h6>${matchDate[0].localName}<br>(${matchDate[0].name})</h6>`;
+  }
+
+  bodydata+=`<ul>`;
 
   for (let d in data) {
     let job = data[d];
