@@ -48,20 +48,25 @@ let singnup=async()=>{
     if(!name.value){
       alert("Please Fill The Name");
       name.classList.add("border-danger");
+      return;
     }if(!Email.value){
       alert("Please Fill The Email");
       Email.classList.add("border-danger");
+      return;
     }if(!Passowrd.value){
       alert("Please Fill The Confirm Password");
       Passowrd.classList.add("border-danger");
+      return;
     }if(!Passowrd1.value){
       alert("Please Fill The Password");
       Passowrd1.classList.add("border-danger");
+      return;
     }
     if(Passowrd.value !== Passowrd1.value){
       alert("Password And Confirm Password is not same");
        Passowrd1.classList.add("border-danger");
        Passowrd.classList.add("border-danger");
+       return;
     }
     try{
        const userCredential= await createUserWithEmailAndPassword(auth,Email.value,Passowrd.value);
@@ -71,12 +76,13 @@ let singnup=async()=>{
             name:name.value,
             email:Email.value,
           }, { merge: true });
-         alert("created success");
+         alert("Created Successfully");
          return window.location.href="index.html";
     }catch(e){
         if(e.code==="auth/email-already-in-use"){
           Email.classList.add("border-danger");
           alert("This Email is Registered");
+          return;
         }else{
           console.log(e.message);
         }
