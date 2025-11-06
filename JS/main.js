@@ -412,7 +412,6 @@ window.openUpdateBox=async(date,job)=>{
   const clsid = document.getElementById("update_box");
   if (clsid) clsid.classList.add('show');
   const inputbox = document.getElementById("input_box");
-   dropdownUpdate();
   if (inputbox) inputbox.classList.remove('show');
   const addBtn = document.getElementById("update");
   const textInput = document.getElementById("update_select");
@@ -499,7 +498,7 @@ window.openMiniBox = (year, month, day) => {
       }
       let flag = await saveItem(dts, textvalue, startvalue, endvalue);
       if (flag===true) {
-        alert("Add Successfull");
+        alert("Added Successfully");
         if (clsid) clsid.classList.remove('show');
         if (textInput) textInput.value = "";
         if (statTime) statTime.value = "";
@@ -530,16 +529,6 @@ window.openMiniBox = (year, month, day) => {
   }
 };
 
-window.dropdownUpdate= () =>{
-  const textInput = document.getElementById("update_select");
-  let work = JSON.parse(localStorage.getItem("worksname") || "{}");
-  let dd = `<option value="">please select the work</option>`;
-  for (let w in work) {
-    let wo = work[w];
-    dd += `<option value="${wo.name}">${wo.name}</option>`;
-  }
-  if (textInput) textInput.innerHTML = dd;
-}
 
 window.dropdown = () => {
   const textInput = document.getElementById("input_select");
@@ -593,10 +582,10 @@ window.closeDateBox=()=>{
 }
 
 document.getElementById("logout").addEventListener('click',async()=>{
-  if(!confirm("Are You Sure Logout") )return;
+  if(!confirm("Are You Sure Logout?") )return;
   try{
     await signOut(auth);
-    alert("Logout Successfull");
+    alert("Logout Successfully");
     window.location.href="index.html";
   }catch(e){
     console.log(e.message)
@@ -663,7 +652,7 @@ window.saveDate = () => {
   let idString = `date-${id}`;
   dateflag[idString] = { id: idString, hour, startdate, enddate };
   localStorage.setItem("dateflags", JSON.stringify(dateflag));
-  alert("Add Successfull");
+  alert("Added Successfully");
   closeweekinput();
   createCalender(currentdate.getFullYear(), currentdate.getMonth());
   opendDateBox();
@@ -692,7 +681,7 @@ if (addNameBtn) {
     let idKey = `id-${id}`;
     work[idKey] = { id: idKey, name: saveitem };
     localStorage.setItem('worksname', JSON.stringify(work));
-    alert("add successfull");
+    alert("Added Successfully");
     closeworkinput();
     dropdown();
     dropdownUpdate();
@@ -729,5 +718,3 @@ if (typeof flatpickr !== 'undefined') {
   });
 }
 
-
-// localStorage.removeItem('dateflags');
