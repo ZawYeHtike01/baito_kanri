@@ -73,6 +73,21 @@
                 <input id="cancel" type="button" value="Clear">
             </div>
         </div>
+        <div class="update_box" id="update_box">
+            <div class="input_title"><i onclick="closeUpdateBox()" class="fa-solid fa-circle-xmark"></i></div>
+            <div class="work_input">
+                <label for="update_select">Work Name</label>
+                <select name="" id="update_select">
+                    <option value="">please select the work</option>
+                </select>
+                <label for="start_update">From</label>
+                <input id="start_update" type="time" required step="60" >
+                <label for="end_update">To</label>
+                <input id="end_update" type="time" required step="60" >
+                <input id="update" type="button" value="Update">
+            </div>
+        </div>
+        
         <div class="input_workname" id="input_workname">
                 <input id="input_text" type="text" placeholder="Work Name" required>
                 <input  id="add_name" type="button" value="Add">

@@ -35,14 +35,13 @@ onAuthStateChanged(auth, async (user) => {
     await showTodayWork();
     await checkOverhours();
     await createCalender(currentdate.getFullYear(), currentdate.getMonth());
-    
   } else {
     window.location.href = "./index.html";
   }
 });
 
 window.dateToString = (year, month, day) => {
-  const mm = String(month + 1).padStart(2, '0');
+  const mm = String(month+1).padStart(2, '0');
   const dd = String(day).padStart(2, '0');
   return `${year}-${mm}-${dd}`;
 };
@@ -394,13 +393,88 @@ window.openInputBox = async (year, month, day) => {
   for (let d in data) {
     let job = data[d];
     if (!job.start || !job.end) continue;
-    bodydata += `<li><p>${d}</p><p>${job.start}-${job.end}</p><p onclick="deleteItem('${year}',${month},'${day}','${d}')"><i class="fa-solid fa-trash"></i></p></li>`;
+    bodydata += `<li onclick="openUpdateBox('${dts}','${d}')"><p>${d}</p><p>${job.start}-${job.end}</p><p onclick="deleteItem('${year}',${month},'${day}','${d}')"><i class="fa-solid fa-trash"></i></p></li>`;
   }
   bodydata += `</ul>
     <button onclick="openMiniBox(${year},${month},${day})"><i class="fa-solid fa-plus"></i></button>
   `;
 
   if (inputBody) inputBody.innerHTML = bodydata;
+};
+
+window.closeUpdateBox=()=>{
+  const clsid = document.getElementById("update_box");
+  if (clsid) clsid.classList.remove('show');
+};
+
+window.openUpdateBox=async(date,job)=>{
+  const user=auth.currentUser;
+  const clsid = document.getElementById("update_box");
+  if (clsid) clsid.classList.add('show');
+  const inputbox = document.getElementById("input_box");
+   dropdownUpdate();
+  if (inputbox) inputbox.classList.remove('show');
+  const addBtn = document.getElementById("update");
+  const textInput = document.getElementById("update_select");
+  const statTime = document.getElementById("start_update");
+  const endTime = document.getElementById("end_update");
+  const q = doc(db, "shifts", user.uid, "workshifts", date);
+  const snap=await getDoc(q);
+  console.log(job);
+  
+  if(snap.exists()){
+    const data=snap.data();
+    const j=data[job];
+    console.log(j);
+    textInput.value=job;
+    statTime.value=j.start;
+    endTime.value=j.end;
+  }
+
+  if(addBtn){
+    addBtn.onclick=async()=>{
+      try{
+          await updateDoc(q,{
+          [textInput.value]:{start:statTime.value,end:endTime.value}
+        })
+        closeUpdateBox();
+        
+        alert("Updated Successfully");
+        const [y, m] = date.split("-");
+        const key = `${y}-${m}`;
+        console.log(monthCache[key][date]);
+        if (monthCache[key]) {
+          monthCache[key][date][textInput.value]={ start:statTime.value,end:endTime.value};
+        }
+        await createCalender(currentdate.getFullYear(), currentdate.getMonth());
+        await showTodayWork();
+      }catch(e){
+        console.log(e.message);
+      }
+      
+    }
+  }
+  
+  
+ 
+  if (typeof flatpickr !== 'undefined') {
+    flatpickr("#start_time", {
+      enableTime: true,
+      noCalendar: true,
+      time_24hr: true,
+      dateFormat: "H:i",
+      defaultDate: "none",
+      allowInput: true,
+    });
+    flatpickr("#end_time", {
+      enableTime: true,
+      noCalendar: true,
+      time_24hr: true,
+      dateFormat: "H:i",
+      defaultDate: "none",
+      allowInput: true,
+    });
+  }
 };
 
 window.openMiniBox = (year, month, day) => {
@@ -423,7 +497,6 @@ window.openMiniBox = (year, month, day) => {
       }
     };
   }
-
   dropdown();
 
   if (cancelBtn) {
@@ -476,6 +549,17 @@ window.openMiniBox = (year, month, day) => {
     });
   }
 };
+
+window.dropdownUpdate= () =>{
+  const textInput = document.getElementById("update_select");
+  let work = JSON.parse(localStorage.getItem("worksname") || "{}");
+  let dd = `<option value="">please select the work</option>`;
+  for (let w in work) {
+    let wo = work[w];
+    dd += `<option value="${wo.name}">${wo.name}</option>`;
+  }
+  if (textInput) textInput.innerHTML = dd;
+}
 
 window.dropdown = () => {
   const textInput = document.getElementById("input_select");
@@ -631,6 +715,7 @@ if (addNameBtn) {
     alert("add successfull");
     closeworkinput();
     dropdown();
+    dropdownUpdate();
     const clsid = document.getElementById("mini_box");
     if (clsid) clsid.classList.add('show');
   });
