@@ -393,7 +393,7 @@ window.openInputBox = async (year, month, day) => {
   for (let d in data) {
     let job = data[d];
     if (!job.start || !job.end) continue;
-    bodydata += `<li onclick="openUpdateBox('${dts}','${d}')"><p>${d}</p><p>${job.start}-${job.end}</p><p onclick="deleteItem('${year}',${month},'${day}','${d}')"><i class="fa-solid fa-trash"></i></p></li>`;
+    bodydata += `<li><p onclick="openUpdateBox('${dts}','${d}')">${d}</p><p onclick="openUpdateBox('${dts}','${d}')">${job.start}-${job.end}</p><p onclick="deleteItem('${year}',${month},'${day}','${d}')"><i class="fa-solid fa-trash"></i></p></li>`;
   }
   bodydata += `</ul>
     <button onclick="openMiniBox(${year},${month},${day})"><i class="fa-solid fa-plus"></i></button>
@@ -455,26 +455,6 @@ window.openUpdateBox=async(date,job)=>{
     }
   }
   
-  
- 
-  if (typeof flatpickr !== 'undefined') {
-    flatpickr("#start_time", {
-      enableTime: true,
-      noCalendar: true,
-      time_24hr: true,
-      dateFormat: "H:i",
-      defaultDate: "none",
-      allowInput: true,
-    });
-    flatpickr("#end_time", {
-      enableTime: true,
-      noCalendar: true,
-      time_24hr: true,
-      dateFormat: "H:i",
-      defaultDate: "none",
-      allowInput: true,
-    });
-  }
 };
 
 window.openMiniBox = (year, month, day) => {
